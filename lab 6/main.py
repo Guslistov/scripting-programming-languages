@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton,
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from datetime import datetime
 
 class DataApp(QMainWindow):
     def __init__(self):
@@ -90,10 +91,21 @@ class DataApp(QMainWindow):
             self.msg.setText(f"Ошибка обновления графика: {str(e)}")
     
     def add_data(self):
+
+        try:
+            date_object = datetime.strptime(self.input_date.text(), "%Y-%m-%d")
+            date_object.date()
+
+            date_object = str(date_object)[:10]
+            print(date_object)
+        except ValueError:
+            self.msg.setText("Неверный формат даты. Требуется %Y-%m-%d")
+            return None
+
         try:
             value1 = float(self.input_value1.text())
             value2 = float(self.input_value2.text())
-            date = self.input_date.text()
+            date = str(date_object)
             
             row = pd.DataFrame({
                 'Date': [date],
